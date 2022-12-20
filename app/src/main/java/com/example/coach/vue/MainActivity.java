@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         lblIMG = (TextView) findViewById(R.id.lblIMG);
         imgSmiley = (ImageView) findViewById(R.id.imgSmiley);
         btnCalc = (Button) findViewById(R.id.btnCalc);
-        controle = Controle.getInstance();
+        controle = Controle.getInstance(this);
         ecouteCalcul();
     }
 
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
      * @param sexe
      */
     private void afficheResult(Integer poids, Integer taille, Integer age, Integer sexe){
-        controle.creerProfil(poids, taille, age, sexe);
+        controle.creerProfil(poids, taille, age, sexe,this);
         String message = controle.getMessage();
         float img = controle.getImg();
         if (message.equals("normal")){
@@ -103,5 +104,23 @@ public class MainActivity extends AppCompatActivity {
             lblIMG.setTextColor(Color.RED);
         }
         lblIMG.setText(String.format("%.01f",img)+" : IMG "+message);
+    }
+
+    /**
+     * récupère les informations du profil (si pas nul) et les affiche
+     */
+    private void recupProfil(){
+        if(controle.getTaille() != null){
+            txtTaille.setText(controle.getTaille().toString());
+            txtPoids.setText(controle.getPoids().toString());
+            txtAge.setText(controle.getAge().toString());
+            if(controle.getSexe() == 1){
+                rdHomme.setChecked(true);
+            }else{
+                MenuItem rdFemme = null;
+                rdFemme.setChecked(true);
+            }
+            btnCalc.performClick();
+        }
     }
 }
